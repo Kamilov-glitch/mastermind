@@ -1,18 +1,19 @@
 #  console version of mastermind game
 # for more information check the wikipedia
+class String
+	def black;       "\e[40m#{self}\e[0m" end
+	def red;         "\e[41m#{self}\e[0m" end
+	def green;       "\e[42m#{self}\e[0m" end
+	def brown;       "\e[43m#{self}\e[0m" end
+	def blue;        "\e[44m#{self}\e[0m" end
+	def magenta;     "\e[45m#{self}\e[0m" end
+	def cyan;        "\e[46m#{self}\e[0m" end
+	def gray;        "\e[47m#{self}\e[0m" end
+end
 module Colors
-  class String
-    def black;       "\e[40m#{self}\e[0m" end
-		def red;         "\e[41m#{self}\e[0m" end
-		def green;       "\e[42m#{self}\e[0m" end
-		def brown;       "\e[43m#{self}\e[0m" end
-		def blue;        "\e[44m#{self}\e[0m" end
-		def magenta;     "\e[45m#{self}\e[0m" end
-		def cyan;        "\e[46m#{self}\e[0m" end
-		def gray;        "\e[47m#{self}\e[0m" end
-  end
+  
 	
-	color_palette = {
+	@@color_palette = {
 		1 =>'black', 
 		2 => 'red', 
 		3 => 'green', 
@@ -66,24 +67,29 @@ class HumanBreaker
 	def choose
 		ask_for_num
 		@num.to_s.split("").each do |n|
-			color = color_palette[n.to_i]
+			color = @@color_palette[n.to_i]
 			case color
 			when 'black'
-				black
+				print n.black
 			when 'red'
-				red
+				print n.red
 			when 'green'
-				green
+				print n.green
 			when 'brown'
-				brown
+				print n.brown
 			when 'blue'
-				blue
+				print n.blue
 			when 'magenta'
-				magenta
+				print n.magenta
 			when 'cyan'
-				cyan
+				print n.cyan
 			when 'gray'
-				gray
+				print n.gray
 			end
 		end
+	end
 end
+
+jack = HumanBreaker.new('jack')
+jack.choose
+puts " "
