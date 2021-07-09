@@ -27,20 +27,24 @@ end
 
 class Maker
 	include Colors
-	
+	@@num = 0
 	@@chosen_colors      # bu sonra yoxlama ucun lazim olasan
 	@@random_colors = []
-	def random_color_chose
-		while random_colors.length < 4
-			random_color = rand(1..6)
-			random_colors.push(random_color) unless random_colors.include?(random_color)
+	def self.random_color_chose
+		while @@random_colors.length < 4
+			random_color = rand(1..8).to_s
+			@@random_colors.push(random_color) unless @@random_colors.include?(random_color)
 		end
 	end
 
 	def self.ask_for_num
-		puts 'Please enter 4 numbers from 1 to 6 inclusive.'
+		puts 'Please enter 4 numbers from 1 to 8 inclusive.'
 		@@num = gets.chomp.to_i
-		ask_for_num if @num.to_s.length < 4 || @num.to_s.length > 4
+		ask_for_num if @@num.to_s.length < 4 || @@num.to_s.length > 4
+	end
+
+	def self.random_color_getter
+		@@random_colors
 	end
 	
 	# def self.make
@@ -83,51 +87,68 @@ end
 
 class HumanBreaker < Maker
 	include Colors
+	@@num = 0
 	@@find_attempts = []
 	def initialize(name)
 		@name = name
 	end
 
-	def ask_for_num
-		puts 'Please enter 4 numbers from 1 to 6 inclusive.'
-		@num = gets.chomp.to_i
-		ask_for_num if @num.to_s.length < 4 || @num.to_s.length > 4
+	def self.ask_for_num
+		puts 'Please enter 4 numbers from 1 to 8 inclusive.'
+		@@num = gets.chomp
+		ask_for_num if @@num.to_s.length < 4 || @@num.to_s.length > 4
+		@@find_attempts = @@num.to_s.split("")
 	end
 
-	def choose
-		ask_for_num
-		@num.to_s.split("").each do |n|
-			color = @@color_palette[n]
-			case color
-			when 'black'
-				@@find_attempts.push(color)
+	def self.choose
+		self.ask_for_num
+		@@find_attempts.each do |n|
+			case n
+			when '1'
 				print n.black
-			when 'red'
-				@@find_attempts.push(color)
+			when '2'
 				print n.red
-			when 'green'
-				@@find_attempts.push(color)
+			when '3'
 				print n.green
-			when 'brown'
-				@@find_attempts.push(color)
+			when '4'
 				print n.brown
-			when 'blue'
-				@@find_attempts.push(color)
+			when '5'
 				print n.blue
-			when 'magenta'
-				@@find_attempts.push(color)
+			when '6'
 				print n.magenta
-			when 'cyan'
-				@@find_attempts.push(color)
+			when '7'
 				print n.cyan
-			when 'gray'
-				@@find_attempts.push(color)
+			when '8'
 				print n.gray
 			end
 		end
 	end
-end
 
-jack = HumanBreaker.new('jack')
-jack.choose
+	def self.find_attempts_getter
+		@@find_attempts
+	end
+
+	def self.check
+		if @@find_attempts == @@random_colors
+			"You Win!"
+		else
+			@@find_attempts.each_with_index do |n, indx|
+				if @@random_colors.include?(n) && @@random_colors[indx] == n
+					print '◯'.green
+				elsif @@random_colors.include?(n)
+					print '◯'.black
+				end
+			end
+			puts " "
+			"Try Again"
+		end
+	end
+			
+	
+end
+Maker.random_color_chose
+p Maker.random_color_getter
+HumanBreaker.choose
 puts " "
+p HumanBreaker.find_attempts_getter
+p HumanBreaker.check
