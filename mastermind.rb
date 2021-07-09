@@ -28,7 +28,7 @@ end
 class Maker
 	include Colors
 	@@num = 0
-	@@chosen_colors      # bu sonra yoxlama ucun lazim olasan
+	@@chosen_colors = []      # bu sonra yoxlama ucun lazim olasan
 	@@random_colors = []
 	def self.random_color_chose
 		while @@random_colors.length < 4
@@ -39,8 +39,9 @@ class Maker
 
 	def self.ask_for_num
 		puts 'Please enter 4 numbers from 1 to 8 inclusive.'
-		@@num = gets.chomp.to_i
-		ask_for_num if @@num.to_s.length < 4 || @@num.to_s.length > 4
+		@@num = gets.chomp
+		ask_for_num if @@num.length < 4 || @@num.to_s.length > 4
+		@@chosen_colors = @@num.split("")
 	end
 
 	def self.random_color_getter
@@ -79,8 +80,9 @@ class Maker
 	# end
 end
 
-class CompMaker < Maker
+class CompBreaker < Maker
 	include Colors
+	
 end
 
 
@@ -146,9 +148,11 @@ class HumanBreaker < Maker
 			
 	
 end
-Maker.random_color_chose
-p Maker.random_color_getter
-HumanBreaker.choose
-puts " "
-p HumanBreaker.find_attempts_getter
-p HumanBreaker.check
+12.times do 
+	Maker.random_color_chose
+	# p Maker.random_color_getter
+	HumanBreaker.choose
+	puts " "
+	# p HumanBreaker.find_attempts_getter
+	p HumanBreaker.check
+end
