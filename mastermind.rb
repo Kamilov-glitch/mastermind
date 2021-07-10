@@ -1,3 +1,5 @@
+require 'pry'
+
 #  console version of mastermind game
 # for more information check the wikipedia
 class String
@@ -32,13 +34,13 @@ class Maker
 	@@random_colors = []
 	def self.random_color_chose
 		while @@random_colors.length < 4
-			random_color = rand(1..8).to_s
+			random_color = rand(1..6).to_s
 			@@random_colors.push(random_color) unless @@random_colors.include?(random_color)
 		end
 	end
 
 	def self.ask_for_num
-		puts 'Please enter 4 numbers from 1 to 8 inclusive.'
+		puts 'Please enter 4 numbers from 1 to 6 inclusive.'
 		@@num = gets.chomp
 		ask_for_num if @@num.length < 4 || @@num.to_s.length > 4
 		@@chosen_colors = @@num.split("")
@@ -82,7 +84,31 @@ end
 
 class CompBreaker < Maker
 	include Colors
-	
+	@@random_comp_attempts = []
+
+	def self.random_comp_color_chose
+		random_color = rand(1..6).to_s * (4 - @@random_comp_attempts.length)
+		@@random_comp_attempts += random_color.split("")
+	end
+
+	def self.check
+		if @@random_comp_attempts == @@chosen_colors
+			"Computer wins!"
+		else
+			@@random_comp_attempts.each_with_index do |n, indx|
+        unless @@chosen_colors.include?(n)
+          @@random_comp_attempts.delete(n)
+        end
+      end
+      if @@random_comp_attempts.length < 4
+        self.random_comp_color_chose 
+      else
+        @@random_comp_attempts.shuffle!
+        self.check
+      end
+    end
+    true
+  end
 end
 
 
@@ -91,14 +117,17 @@ class HumanBreaker < Maker
 	include Colors
 	@@num = 0
 	@@find_attempts = []
+
 	def initialize(name)
 		@name = name
 	end
 
 	def self.ask_for_num
-		puts 'Please enter 4 numbers from 1 to 8 inclusive.'
+		puts 'Please enter 4 numbers from 1 to 6 inclusive.'
 		@@num = gets.chomp
-		ask_for_num if @@num.to_s.length < 4 || @@num.to_s.length > 4
+		if (@@num.to_s.length < 4 || @@num.to_s.length > 4)
+			ask_for_num
+		end
 		@@find_attempts = @@num.to_s.split("")
 	end
 
@@ -148,11 +177,15 @@ class HumanBreaker < Maker
 			
 	
 end
-12.times do 
-	Maker.random_color_chose
-	# p Maker.random_color_getter
-	HumanBreaker.choose
-	puts " "
-	# p HumanBreaker.find_attempts_getter
-	p HumanBreaker.check
-end
+# 12.times do 
+# 	Maker.random_color_chose
+# 	# p Maker.random_color_getter
+# 	HumanBreaker.choose
+# 	puts " "
+# 	# p HumanBreaker.find_attempts_getter
+# 	p HumanBreaker.check
+# end
+
+Maker.ask_for_num
+CompBreaker.random_comp_color_chose
+p CompBreaker.check
