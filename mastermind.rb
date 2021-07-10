@@ -88,26 +88,36 @@ class CompBreaker < Maker
 
 	def self.random_comp_color_chose
 		random_color = rand(1..6).to_s * (4 - @@random_comp_attempts.length)
-		@@random_comp_attempts += random_color.split("")
+		unless @@random_comp_attempts.include?(random_color)
+			@@random_comp_attempts += random_color.split("")
+		else
+			self.random_comp_color_chose
+		end 
 	end
-
+	@@x = 0
+	@@temporary_holder = []
 	def self.check
+		p @@random_comp_attempts
+    # binding.pry
 		if @@random_comp_attempts == @@chosen_colors
 			"Computer wins!"
 		else
-			@@random_comp_attempts.each_with_index do |n, indx|
-        unless @@chosen_colors.include?(n)
-          @@random_comp_attempts.delete(n)
+      if @@chosen_colors.include?(@@random_comp_attempts[@@x])
+        @@chosen_colors.select{|num| num == @@random_comp_attempts[@@x]}.length.times do
+          @@temporary_holder.push(@@random_comp_attempts[@@x])
+					@@x += 1
         end
       end
+			@@random_comp_attempts = @@temporary_holder
       if @@random_comp_attempts.length < 4
-        self.random_comp_color_chose 
+        self.random_comp_color_chose
+        self.check 
       else
         @@random_comp_attempts.shuffle!
         self.check
       end
     end
-    true
+    # true
   end
 end
 
