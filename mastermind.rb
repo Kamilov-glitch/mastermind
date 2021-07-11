@@ -85,14 +85,15 @@ end
 class CompBreaker < Maker
 	include Colors
 	@@random_comp_attempts = []
-
+	@@colors_that_have_been_checked = []
 	def self.random_comp_color_chose
-		random_color = rand(1..6).to_s * (4 - @@random_comp_attempts.length)
-		unless @@random_comp_attempts.include?(random_color)
-			@@random_comp_attempts += random_color.split("")
+		random_color = (rand(1..6).to_s * (4 - @@random_comp_attempts.length)).split("")
+		unless @@random_comp_attempts.include?(random_color[0]) && @@colors_that_have_been_checked.include?(random_color[0])
+			@@random_comp_attempts += random_color
 		else
 			self.random_comp_color_chose
-		end 
+		end
+		@@colors_that_have_been_checked += random_color 
 	end
 	@@x = 0
 	@@temporary_holder = []
@@ -103,10 +104,9 @@ class CompBreaker < Maker
 			"Computer wins!"
 		else
       if @@chosen_colors.include?(@@random_comp_attempts[@@x])
-        @@chosen_colors.select{|num| num == @@random_comp_attempts[@@x]}.length.times do
-          @@temporary_holder.push(@@random_comp_attempts[@@x])
-					@@x += 1
-        end
+        @@temporary_holder += @@chosen_colors.select{|num| num == @@random_comp_attempts[@@x]}
+        # @@temporary_holder.push(@@random_comp_attempts[@@x])
+		@@x += @@chosen_colors.select{|num| num == @@random_comp_attempts[@@x]}.length
       end
 			@@random_comp_attempts = @@temporary_holder
       if @@random_comp_attempts.length < 4
