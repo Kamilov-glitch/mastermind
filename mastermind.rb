@@ -84,21 +84,26 @@ end
 
 class CompBreaker < Maker
 	include Colors
+	@@for_test_counter = 0
 	@@random_comp_attempts = []
 	@@colors_that_have_been_checked = []
 	def self.random_comp_color_chose
 		random_color = (rand(1..6).to_s * (4 - @@random_comp_attempts.length)).split("")
 		unless @@random_comp_attempts.include?(random_color[0]) && @@colors_that_have_been_checked.include?(random_color[0])
 			@@random_comp_attempts += random_color
+			@@colors_that_have_been_checked += random_color
+			@@for_test_counter += 1 
 		else
 			self.random_comp_color_chose
 		end
-		@@colors_that_have_been_checked += random_color 
+		# @@colors_that_have_been_checked += random_color 
 	end
+
 	@@x = 0
 	@@temporary_holder = []
 	def self.check
 		p @@random_comp_attempts
+		p @@for_test_counter
     # binding.pry
 		if @@random_comp_attempts == @@chosen_colors
 			"Computer wins!"
@@ -113,8 +118,16 @@ class CompBreaker < Maker
         self.random_comp_color_chose
         self.check 
       else
-        @@random_comp_attempts.shuffle!
-        self.check
+        @@random_comp_attempts.each_with_index do |n, indx|
+					if (n != @@chosen_colors[indx] || @@random_comp_attempts[indx + 1] != @@chosen_colors[indx + 1]) && indx != 3
+						@@random_comp_attempts[indx], @@random_comp_attempts[indx + 1] =  @@random_comp_attempts[indx + 1], @@random_comp_attempts[indx]
+					elsif indx == 3 && n != @@chosen_colors[indx] && @@random_comp_attempts[0] != @@chosen_colors[0]
+						@@random_comp_attempts[indx], @@random_comp_attempts[0] =  @@random_comp_attempts[0], @@random_comp_attempts[indx]
+					else
+						@@random_comp_attempts.shuffle!
+					end
+				end
+				self.check
       end
     end
     # true
@@ -199,3 +212,11 @@ end
 Maker.ask_for_num
 CompBreaker.random_comp_color_chose
 p CompBreaker.check
+
+
+p 'a'.black == 'a'.black
+
+## demeli reqemlerin verilen reqemlerle ugun olamsi zamani geri print olunan rengleri
+# cevirmek lazimdi array retur value-ya
+# sonra compun avtomatik secdiyi value ile yoxlayirriq (tam dord reqemi duzgun secenden sonra)
+# ona uygun kom deyisihiklik edir
