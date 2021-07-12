@@ -84,12 +84,13 @@ end
 
 class CompBreaker < Maker
 	include Colors
+
 	@@for_test_counter = 0
 	@@random_comp_attempts = []
 	@@colors_that_have_been_checked = []
 	def self.random_comp_color_chose
 		random_color = (rand(1..6).to_s * (4 - @@random_comp_attempts.length)).split("")
-		unless @@random_comp_attempts.include?(random_color[0]) && @@colors_that_have_been_checked.include?(random_color[0])
+		unless @@random_comp_attempts.include?(random_color[0]) || @@colors_that_have_been_checked.include?(random_color[0])
 			@@random_comp_attempts += random_color
 			@@colors_that_have_been_checked += random_color
 			@@for_test_counter += 1 
@@ -99,13 +100,17 @@ class CompBreaker < Maker
 		# @@colors_that_have_been_checked += random_color 
 	end
 
+	def self.equality
+		@@random_comp_attempts == @@chosen_colors
+	end
+
 	@@x = 0
 	@@temporary_holder = []
 	def self.check
 		p @@random_comp_attempts
 		p @@for_test_counter
     # binding.pry
-		if @@random_comp_attempts == @@chosen_colors
+		if self.equality
 			"Computer wins!"
 		else
       if @@chosen_colors.include?(@@random_comp_attempts[@@x])
@@ -118,13 +123,15 @@ class CompBreaker < Maker
         self.random_comp_color_chose
         self.check 
       else
-        @@random_comp_attempts.each_with_index do |n, indx|
-					if (n != @@chosen_colors[indx] || @@random_comp_attempts[indx + 1] != @@chosen_colors[indx + 1]) && indx != 3
-						@@random_comp_attempts[indx], @@random_comp_attempts[indx + 1] =  @@random_comp_attempts[indx + 1], @@random_comp_attempts[indx]
-					elsif indx == 3 && n != @@chosen_colors[indx] && @@random_comp_attempts[0] != @@chosen_colors[0]
-						@@random_comp_attempts[indx], @@random_comp_attempts[0] =  @@random_comp_attempts[0], @@random_comp_attempts[indx]
-					else
-						@@random_comp_attempts.shuffle!
+        for x in 0..3
+					for y in x + 1..3
+						if (@@random_comp_attempts[x] != @@chosen_colors[x] && @@random_comp_attempts[y] != @@chosen_colors[y]) && x != 3
+							@@random_comp_attempts[x], @@random_comp_attempts[y] =  @@random_comp_attempts[y], @@random_comp_attempts[x]
+							break if equality
+						elsif x == 3 && @@random_comp_attempts[x] != @@chosen_colors[x] && @@random_comp_attempts[0] != @@chosen_colors[0]
+							@@random_comp_attempts[x], @@random_comp_attempts[0] =  @@random_comp_attempts[0], @@random_comp_attempts[x]
+							break if self.equality == true
+						end
 					end
 				end
 				self.check
