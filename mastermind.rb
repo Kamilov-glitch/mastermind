@@ -218,7 +218,7 @@ class HumanBreaker < Maker
 			# @@num_var = 0
 			@@find_attempts.each_with_index do |n, indx|
 				if @@random_colors.include?(n) && @@random_colors[indx] == n
-					print '◯'.green
+					print '◯'.red
 					@@hash_to_store_loop[n] += 1
 					# @@num_var += 1
 				end
@@ -227,7 +227,7 @@ class HumanBreaker < Maker
 			@@find_attempts.each_with_index do |n ,indx|
 				# p @@hash_to_store_loop[n]
 				if @@random_colors.include?(n) && @@hash_to_store_loop[n] < @@random_colors.count(n)
-					print '◯'.red
+					print '◯'.black
 					@@hash_to_store_loop[n] += 1
 				end
 			end
@@ -280,7 +280,14 @@ def game
 
 end
 
-
+puts "Okay, the rules of the game are simple, but I ain't gonna explain them."
+puts "Just google it and you'll find the information necessary."
+puts "Anyways, in my version of the game you can choose to be breaker of maker."
+puts "If you choose to be a breaker then you'll have to guess the randomly generated code by the computer."
+puts "You'll have 12 rounds and each round you'll be given hints such as #{'◯'.red} or #{'◯'.black}."
+puts "Red one means one of your guesses is included in code and is in correct position, black one means it is in code,"
+puts "But not in correct position."
+puts "You'll figure out the rest just start playin already!!"
 puts "Would you like to play as a Maker or Breaker?"
 game
 
