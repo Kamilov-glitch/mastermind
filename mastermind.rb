@@ -235,7 +235,21 @@ class HumanBreaker < Maker
 	
 end
 
+def question_to_user
+	puts "Would you like to play again? Enter 'y' for yes or 'n' for no:"
+	an_answer = gets.chomp.downcase
+	if an_answer == 'y'
+		game
+	elsif an_answer == 'n'
+		puts "Maybe another time. Bye!"
+	else
+		puts "Please enter either 'y' or 'n'."
+		question_to_user
+	end
+end
+
 def game
+	puts "Press and enter 'm' for Maker and 'b' for Breaker:"
 	user_choice = gets.chomp.downcase
 	if user_choice == 'b'
 		12.times do 
@@ -245,7 +259,9 @@ def game
 			puts " "
 			# p HumanBreaker.find_attempts_getter
 			p HumanBreaker.check
+			break if HumanBreaker.check == "You Win!"
 		end
+		puts 'Well, your twelve tries are over, sadly...' unless HumanBreaker.check == "You Win!" 
 	elsif user_choice == 'm'
 		Maker.ask_for_num
 		CompBreaker.random_comp_color_chose
@@ -254,13 +270,14 @@ def game
 		puts "Please stop being stupid and enter either 'm' or 'b' for gods sake!"
 		game
 	end
+
+	question_to_user
+
 end
 
 
-p 'a'.black == 'a'.black
-
 puts "Would you like to play as a Maker or Breaker?"
-puts "Press and enter 'm' for Maker and 'b' for Breaker:"
 game
 
-#hash yarat ve orda sore ele nece defe bir reqemin ustunden kecdiyini
+
+# variable-lari sifirlamiq lazimdir, its almost done otherwise
