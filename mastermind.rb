@@ -120,6 +120,11 @@ class CompBreaker < Maker
 		p @@for_test_counter
     # binding.pry
 		if self.equality
+			@@random_comp_attempts = []
+			@@temporary_holder = []
+			@@for_test_counter = 0
+			@@colors_that_have_been_checked = []
+			@@x = 0
 			"Computer wins!"
 		else
       if @@chosen_colors.include?(@@random_comp_attempts[@@x])
@@ -168,7 +173,7 @@ class HumanBreaker < Maker
 			ask_for_num
 		end
 		@@find_attempts = @@num.to_s.split("")
-		@@qurbanliq_quzu = @@num.to_s.split("")
+		# @@qurbanliq_quzu = @@num.to_s.split("")
 	end
 
 	def self.choose
