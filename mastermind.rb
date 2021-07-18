@@ -25,6 +25,15 @@ module Colors
 		'7' => 'cyan', 
 		'8' => 'gray'
 	}
+
+	@@hash_to_store_loop = {
+		'1' => 0,
+		'2' => 0,
+		'3' => 0,
+		'4' => 0,
+		'5' => 0,
+		'6' => 0
+	}
 end
 
 class Maker
@@ -35,7 +44,7 @@ class Maker
 	def self.random_color_chose
 		while @@random_colors.length < 4
 			random_color = rand(1..6).to_s
-			@@random_colors.push(random_color) unless @@random_colors.include?(random_color)
+			@@random_colors.push(random_color)
 		end
 	end
 
@@ -114,7 +123,7 @@ class CompBreaker < Maker
 			"Computer wins!"
 		else
       if @@chosen_colors.include?(@@random_comp_attempts[@@x])
-        @@temporary_holder += @@chosen_colors.select{|num| num == @@random_comp_attempts[@@x]}
+        @@temporary_holder += @@chosen_colors.select{|num| num == @@random_comp_attempts[@@x]}   #.count() - la evez et bunu
         # @@temporary_holder.push(@@random_comp_attempts[@@x])
 		@@x += @@chosen_colors.select{|num| num == @@random_comp_attempts[@@x]}.length
       end
@@ -159,6 +168,7 @@ class HumanBreaker < Maker
 			ask_for_num
 		end
 		@@find_attempts = @@num.to_s.split("")
+		@@qurbanliq_quzu = @@num.to_s.split("")
 	end
 
 	def self.choose
@@ -185,21 +195,38 @@ class HumanBreaker < Maker
 		end
 	end
 
+	def self.random_colors_getter
+		@@random_colors
+	end
+
 	def self.find_attempts_getter
 		@@find_attempts
 	end
 
 	def self.check
+		p self.random_color_getter
+		p self.find_attempts_getter
 		if @@find_attempts == @@random_colors
 			"You Win!"
 		else
+			
+			# @@num_var = 0
 			@@find_attempts.each_with_index do |n, indx|
 				if @@random_colors.include?(n) && @@random_colors[indx] == n
 					print '◯'.green
-				elsif @@random_colors.include?(n)
-					print '◯'.black
+					@@hash_to_store_loop[n] += 1
+					# @@num_var += 1
 				end
 			end
+			
+			@@find_attempts.each_with_index do |n ,indx|
+				# p @@hash_to_store_loop[n]
+				if @@random_colors.include?(n) && @@hash_to_store_loop[n] < @@random_colors.count(n)
+					print '◯'.red
+					@@hash_to_store_loop[n] += 1
+				end
+			end
+			@@hash_to_store_loop.each {|k, v| @@hash_to_store_loop[k] = 0}
 			puts " "
 			"Try Again"
 		end
@@ -207,23 +234,33 @@ class HumanBreaker < Maker
 			
 	
 end
-# 12.times do 
-# 	Maker.random_color_chose
-# 	# p Maker.random_color_getter
-# 	HumanBreaker.choose
-# 	puts " "
-# 	# p HumanBreaker.find_attempts_getter
-# 	p HumanBreaker.check
-# end
 
-Maker.ask_for_num
-CompBreaker.random_comp_color_chose
-p CompBreaker.check
+def game
+	user_choice = gets.chomp.downcase
+	if user_choice == 'b'
+		12.times do 
+			Maker.random_color_chose
+			# p Maker.random_color_getter
+			HumanBreaker.choose
+			puts " "
+			# p HumanBreaker.find_attempts_getter
+			p HumanBreaker.check
+		end
+	elsif user_choice == 'm'
+		Maker.ask_for_num
+		CompBreaker.random_comp_color_chose
+		p CompBreaker.check
+	else
+		puts "Please stop being stupid and enter either 'm' or 'b' for gods sake!"
+		game
+	end
+end
 
 
 p 'a'.black == 'a'.black
 
-## demeli reqemlerin verilen reqemlerle ugun olamsi zamani geri print olunan rengleri
-# cevirmek lazimdi array retur value-ya
-# sonra compun avtomatik secdiyi value ile yoxlayirriq (tam dord reqemi duzgun secenden sonra)
-# ona uygun kom deyisihiklik edir
+puts "Would you like to play as a Maker or Breaker?"
+puts "Press and enter 'm' for Maker and 'b' for Breaker:"
+game
+
+#hash yarat ve orda sore ele nece defe bir reqemin ustunden kecdiyini
