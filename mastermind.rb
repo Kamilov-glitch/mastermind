@@ -11,6 +11,8 @@ class String
 	def magenta;     "\e[45m#{self}\e[0m" end
 	def cyan;        "\e[46m#{self}\e[0m" end
 	def gray;        "\e[47m#{self}\e[0m" end
+	def ozblack;     "\e[30m#{self}\e[0m" end
+	def ozred;       "\e[31m#{self}\e[0m" end
 end
 module Colors
   
@@ -173,7 +175,7 @@ class HumanBreaker < Maker
 			ask_for_num
 		end
 		@@find_attempts = @@num.to_s.split("")
-		# @@qurbanliq_quzu = @@num.to_s.split("")
+		@@qurbanliq_quzu = @@num.to_s.split("")
 	end
 
 	def self.choose
@@ -212,22 +214,24 @@ class HumanBreaker < Maker
 		p self.random_color_getter
 		p self.find_attempts_getter
 		if @@find_attempts == @@random_colors
+			@@random_colors = []
 			"You Win!"
 		else
 			
 			# @@num_var = 0
 			@@find_attempts.each_with_index do |n, indx|
 				if @@random_colors.include?(n) && @@random_colors[indx] == n
-					print '◯'.red
+					print '◯'.ozred
 					@@hash_to_store_loop[n] += 1
+					@@qurbanliq_quzu.delete_at(indx)
 					# @@num_var += 1
 				end
 			end
 			
-			@@find_attempts.each_with_index do |n ,indx|
+			@@qurbanliq_quzu.each_with_index do |n ,indx|
 				# p @@hash_to_store_loop[n]
 				if @@random_colors.include?(n) && @@hash_to_store_loop[n] < @@random_colors.count(n)
-					print '◯'.black
+					print '◯'.ozblack
 					@@hash_to_store_loop[n] += 1
 				end
 			end
@@ -257,16 +261,24 @@ def game
 	puts "Press and enter 'm' for Maker and 'b' for Breaker:"
 	user_choice = gets.chomp.downcase
 	if user_choice == 'b'
-		12.times do 
+		turn = 0
+		while turn < 12 do 
 			Maker.random_color_chose
 			# p Maker.random_color_getter
 			HumanBreaker.choose
 			puts " "
 			# p HumanBreaker.find_attempts_getter
-			p HumanBreaker.check
-			break if HumanBreaker.check == "You Win!"
+			# p HumanBreaker.check
+			turn += 1
+			puts "#Turn #{turn}"
+			if HumanBreaker.check == "You Win!"
+				break
+			elsif turn == 12
+				puts 'Well, your twelve tries are over, sadly...'
+				break
+			end
 		end
-		puts 'Well, your twelve tries are over, sadly...' unless HumanBreaker.check == "You Win!" 
+		 
 	elsif user_choice == 'm'
 		Maker.ask_for_num
 		CompBreaker.random_comp_color_chose
@@ -287,6 +299,8 @@ puts "If you choose to be a breaker then you'll have to guess the randomly gener
 puts "You'll have 12 rounds and each round you'll be given hints such as #{'◯'.red} or #{'◯'.black}."
 puts "Red one means one of your guesses is included in code and is in correct position, black one means it is in code,"
 puts "But not in correct position."
+puts "Oh yes, the colors being used are:"
+puts "#{'1'.black}#{'2'.red}#{'3'.green}#{'4'.brown}#{'5'.blue}#{'6'.magenta}"
 puts "You'll figure out the rest just start playin already!!"
 puts "Would you like to play as a Maker or Breaker?"
 game
