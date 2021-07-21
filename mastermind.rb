@@ -36,6 +36,8 @@ module Colors
 		'5' => 0,
 		'6' => 0
 	}
+	
+
 end
 
 class Maker
@@ -61,6 +63,30 @@ class Maker
 		@@random_colors
 	end
 	
+	def self.print_color(arr)
+		arr.each do |n|
+			case n
+			when '1'
+				print n.black
+			when '2'
+				print n.red
+			when '3'
+				print n.green
+			when '4'
+				print n.brown
+			when '5'
+				print n.blue
+			when '6'
+				print n.magenta
+			when '7'
+				print n.cyan
+			when '8'
+				print n.gray
+			end
+		end
+		puts " "
+	end
+
 	# def self.make
 	# 	@@random_colors.each do |color|
 	# 		case color
@@ -118,6 +144,7 @@ class CompBreaker < Maker
 	@@x = 0
 	@@temporary_holder = []
 	def self.check
+		self.print_color(@@random_comp_attempts)
 		p @@random_comp_attempts
 		p @@for_test_counter
     # binding.pry
