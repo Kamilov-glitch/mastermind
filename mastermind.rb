@@ -1,4 +1,3 @@
-require 'pry'
 
 #  console version of mastermind game
 # for more information check the wikipedia
@@ -87,42 +86,11 @@ class Maker
 		puts " "
 	end
 
-	# def self.make
-	# 	@@random_colors.each do |color|
-	# 		case color
-	# 		when 1
-	# 			@@chosen_colors.push(@@color_palette[1])
-	# 			black
-	# 		when 2
-	# 			@@chosen_colors.push(@@color_palette[2])
-	# 			red
-	# 		when 3
-	# 			@@chosen_colors.push(@@color_palette[3])
-	# 			green
-	# 		when 4
-	# 			@@chosen_colors.push(@@color_palette[4])
-	# 			brown
-	# 		when 5
-	# 			@@chosen_colors.push(@@color_palette[5])
-	# 			blue
-	# 		when 6
-	# 			@@chosen_colors.push(@@color_palette[6])
-	# 			magenta
-	# 		when 7
-	# 			@@chosen_colors.push(@@color_palette[7])
-	# 			cyan
-	# 		when 8
-	# 			@@chosen_colors.push(@@color_palette[8])
-	# 			gray
-	# 		end
-	# 	end
-	# end
 end
 
 class CompBreaker < Maker
 	include Colors
 
-	@@for_test_counter = 0
 	@@random_comp_attempts = []
 	@@colors_that_have_been_checked = []
 	def self.random_comp_color_chose
@@ -130,35 +98,33 @@ class CompBreaker < Maker
 		unless @@random_comp_attempts.include?(random_color[0]) || @@colors_that_have_been_checked.include?(random_color[0])
 			@@random_comp_attempts += random_color
 			@@colors_that_have_been_checked += random_color
-			@@for_test_counter += 1 
 		else
 			self.random_comp_color_chose
 		end
-		# @@colors_that_have_been_checked += random_color 
 	end
 
 	def self.equality
 		@@random_comp_attempts == @@chosen_colors
 	end
 
+	@@turn_counter = 1
 	@@x = 0
 	@@temporary_holder = []
 	def self.check
+		puts "Turn #{@@turn_counter}"
+		@@turn_counter += 1
 		self.print_color(@@random_comp_attempts)
-		p @@random_comp_attempts
-		p @@for_test_counter
-    # binding.pry
 		if self.equality
 			@@random_comp_attempts = []
 			@@temporary_holder = []
 			@@for_test_counter = 0
 			@@colors_that_have_been_checked = []
 			@@x = 0
+			@@turn_counter = 1
 			"Computer wins!"
 		else
       if @@chosen_colors.include?(@@random_comp_attempts[@@x])
         @@temporary_holder += @@chosen_colors.select{|num| num == @@random_comp_attempts[@@x]}   #.count() - la evez et bunu
-        # @@temporary_holder.push(@@random_comp_attempts[@@x])
 		@@x += @@chosen_colors.select{|num| num == @@random_comp_attempts[@@x]}.length
       end
 			@@random_comp_attempts = @@temporary_holder
@@ -180,7 +146,6 @@ class CompBreaker < Maker
 				self.check
       end
     end
-    # true
   end
 end
 
@@ -243,18 +208,15 @@ class HumanBreaker < Maker
 			"You Win!"
 		else
 			
-			# @@num_var = 0
 			@@find_attempts.each_with_index do |n, indx|
 				if @@random_colors.include?(n) && @@random_colors[indx] == n
 					print '◯'.ozred
 					@@hash_to_store_loop[n] += 1
 					@@qurbanliq_quzu.delete_at(indx)
-					# @@num_var += 1
 				end
 			end
 			
 			@@qurbanliq_quzu.each_with_index do |n ,indx|
-				# p @@hash_to_store_loop[n]
 				if @@random_colors.include?(n) && @@hash_to_store_loop[n] < @@random_colors.count(n)
 					print '◯'.ozblack
 					@@hash_to_store_loop[n] += 1
@@ -290,16 +252,15 @@ def game
 		while turn <= 12 do
 			puts "#Turn #{turn}" 
 			Maker.random_color_chose
-			# p Maker.random_color_getter
 			HumanBreaker.choose
 			puts " "
-			# p HumanBreaker.find_attempts_getter
-			# p HumanBreaker.check
 			turn += 1
 			if HumanBreaker.check == "You Win!"
 				break
 			elsif turn == 12
 				puts 'Well, your twelve tries are over, sadly...'
+				puts "The correct answer was..."
+				Maker.print_color (Maker.random_color_getter)
 				break
 			end
 		end
@@ -330,5 +291,3 @@ puts "You'll figure out the rest just start playin already!!"
 puts "Would you like to play as a Maker or Breaker?"
 game
 
-
-# variable-lari sifirlamiq lazimdir, its almost done otherwise
