@@ -211,8 +211,6 @@ class HumanBreaker < Maker
 	end
 
 	def self.check
-		p self.random_color_getter
-		p self.find_attempts_getter
 		if @@find_attempts == @@random_colors
 			@@random_colors = []
 			"You Win!"
@@ -261,8 +259,9 @@ def game
 	puts "Press and enter 'm' for Maker and 'b' for Breaker:"
 	user_choice = gets.chomp.downcase
 	if user_choice == 'b'
-		turn = 0
-		while turn < 12 do 
+		turn = 1
+		while turn <= 12 do
+			puts "#Turn #{turn}" 
 			Maker.random_color_chose
 			# p Maker.random_color_getter
 			HumanBreaker.choose
@@ -270,7 +269,6 @@ def game
 			# p HumanBreaker.find_attempts_getter
 			# p HumanBreaker.check
 			turn += 1
-			puts "#Turn #{turn}"
 			if HumanBreaker.check == "You Win!"
 				break
 			elsif turn == 12
