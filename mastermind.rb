@@ -256,6 +256,7 @@ def game
 			puts " "
 			turn += 1
 			if HumanBreaker.check == "You Win!"
+				puts "You Win!"
 				break
 			elsif turn == 12
 				puts 'Well, your twelve tries are over, sadly...'
